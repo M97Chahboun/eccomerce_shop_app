@@ -1,8 +1,8 @@
+import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
 import '../models/products.model.dart';
-import '../services/api_handler.dart';
 import '../widgets/feeds_widget.dart';
 
 class FeedsScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class FeedsScreen extends StatefulWidget {
 
 class _FeedsScreenState extends State<FeedsScreen> {
   final ScrollController _scrollController = ScrollController();
-  List<ProductsModel> productsList = [];
+
   int limit = 10;
   bool _isLoading = false;
   @override
@@ -40,10 +40,11 @@ class _FeedsScreenState extends State<FeedsScreen> {
     super.didChangeDependencies();
   }
 
+  final Product product = Product();
+
   Future<void> getProducts() async {
-    productsList = await APIHandler.getAllProducts(
-      limit: limit.toString(),
-    );
+    Rocket.get<RocketRequest>(rocketRequestKey).request("products",
+        model: product, params: {"limit": limit.toString()});
     setState(() {});
   }
 
@@ -54,18 +55,23 @@ class _FeedsScreenState extends State<FeedsScreen> {
         // elevation: 4,
         title: const Text('All Products'),
       ),
-      body: productsList.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  GridView.builder(
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            RocketView(
+                model: product,
+                onError: (error, reload) {
+                  return RocketErrorView(
+                    reload: reload,
+                    error: error,
+                  );
+                },
+                builder: (context) {
+                  return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: productsList.length,
+                      itemCount: product.all!.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -73,15 +79,13 @@ class _FeedsScreenState extends State<FeedsScreen> {
                               mainAxisSpacing: 0.0,
                               childAspectRatio: 0.7),
                       itemBuilder: (ctx, index) {
-                        return ChangeNotifierProvider.value(
-                            value: productsList[index],
-                            child: const FeedsWidget());
-                      }),
-                  if (_isLoading)
-                    const Center(child: CircularProgressIndicator()),
-                ],
-              ),
-            ),
+                        return FeedsWidget(product.all![index]);
+                      });
+                }),
+            if (_isLoading) const Center(child: CircularProgressIndicator()),
+          ],
+        ),
+      ),
     );
   }
 }

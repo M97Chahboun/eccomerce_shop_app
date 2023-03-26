@@ -1,43 +1,41 @@
-import 'package:eccomerce_shop_app/services/api_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
+import '../consts/api_consts.dart';
 import '../models/users_model.dart';
+import '../widgets/rocket_error.dart';
 import '../widgets/users_widget.dart';
 
 class UsersScreen extends StatelessWidget {
-  const UsersScreen({Key? key}) : super(key: key);
+  UsersScreen({Key? key}) : super(key: key);
+  final UsersModel users = UsersModel();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Users")),
-      body: FutureBuilder<List<UsersModel>>(
-        future: APIHandler.getAllUsers(),
-        builder: ((context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
+      body: RocketView(
+          onError: (error, reload) {
+            return RocketErrorView(
+              reload: reload,
+              error: error,
             );
-          } else if (snapshot.hasError) {
-            Center(
-              child: Text("An error occured ${snapshot.error}"),
+          },
+          model: users,
+          call: () {
+            Rocket.get<RocketRequest>(rocketRequestKey).request(
+              "users",
+              model: users,
             );
-          } else if (snapshot.data == null) {
-            const Center(
-              child: Text("No products has been added yet"),
-            );
-          }
-          return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (ctx, index) {
-                return ChangeNotifierProvider.value(
-                  value: snapshot.data![index],
-                  child: const UsersWidget(),
-                );
-              });
-        }),
-      ),
+          },
+          builder: (context) {
+            return ListView.builder(
+                itemCount: users.all!.length,
+                itemBuilder: (ctx, index) {
+                  Rocket.add<UsersModel>(rocketUsersKey, users.all![index]);
+                  return const UsersWidget();
+                });
+          }),
     );
   }
 }

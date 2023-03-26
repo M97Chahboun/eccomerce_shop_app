@@ -1,33 +1,40 @@
+import 'dart:developer';
+
+import 'package:eccomerce_shop_app/consts/api_consts.dart';
+import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
 import '../models/categories_model.dart';
-import '../services/api_handler.dart';
 import '../widgets/category_widget.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({Key? key}) : super(key: key);
+  CategoriesScreen({Key? key}) : super(key: key);
+  final Category category = Category();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text("Categories")),
-        body: FutureBuilder<List<CategoriesModel>>(
-            future: APIHandler.getAllCategories(),
-            builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                Center(
-                  child: Text("An error occured ${snapshot.error}"),
-                );
-              } else if (snapshot.data == null) {
-                const Center(
-                  child: Text("No products has been added yet"),
-                );
-              }
+        body: RocketView(
+            model: category,
+            onError: (error, reload) {
+              return RocketErrorView(
+                reload: reload,
+                error: error,
+              );
+            },
+            call: () {
+              Rocket.get<RocketRequest>(rocketRequestKey).request(
+                "categories",
+                model: category,
+                inspect: (data) {
+                  log(data.toString());
+                  return data;
+                },
+              );
+            },
+            builder: (context) {
               return GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -39,10 +46,10 @@ class CategoriesScreen extends StatelessWidget {
                     childAspectRatio: 1.2,
                   ),
                   itemBuilder: (ctx, index) {
-                    return ChangeNotifierProvider.value(
-                        value: snapshot.data![index],
-                        child: const CategoryWidget());
+                    print(category.all);
+                    Rocket.add(rocketCategoriesKey, category.all![index]);
+                    return const CategoryWidget();
                   });
-            })));
+            }));
   }
 }

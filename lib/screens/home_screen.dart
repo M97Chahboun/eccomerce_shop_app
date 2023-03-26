@@ -1,12 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:eccomerce_shop_app/models/products.model.dart';
 import 'package:eccomerce_shop_app/screens/users_screen.dart';
+import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../consts/global_colors.dart';
-import '../models/products.model.dart';
-import '../services/api_handler.dart';
 import '../widgets/appbar_icons.dart';
 import '../widgets/feeds_grid.dart';
 import '../widgets/sale_widget.dart';
@@ -35,17 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   getProducts();
-  //   super.didChangeDependencies();
-  // }
-
-  // Future<void> getProducts() async {
-  //   productsList = await APIHandler.getAllProducts();
-  //   setState(() {});
-  // }
-
+  final Product product = Product();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -63,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   PageTransition(
                     type: PageTransitionType.fade,
-                    child: const CategoriesScreen(),
+                    child: CategoriesScreen(),
                   ),
                 );
               },
@@ -76,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     context,
                     PageTransition(
                       type: PageTransitionType.fade,
-                      child: const UsersScreen(),
+                      child: UsersScreen(),
                     ),
                   );
                 },
@@ -162,26 +153,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      FutureBuilder<List<ProductsModel>>(
-                          future: APIHandler.getAllProducts(limit: "3"),
-                          builder: ((context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (snapshot.hasError) {
-                              Center(
-                                child:
-                                    Text("An error occured ${snapshot.error}"),
-                              );
-                            } else if (snapshot.data == null) {
-                              const Center(
-                                child: Text("No products has been added yet"),
-                              );
-                            }
-                            return FeedsGridWidget(
-                                productsList: snapshot.data!);
+                      RocketView(
+                          onError: (error, reload) {
+                            return RocketErrorView(
+                              reload: reload,
+                              error: error,
+                            );
+                          },
+                          call: () {
+                            Rocket.get<RocketRequest>(rocketRequestKey)
+                                .request("products", model: product, params: {
+                              "offset": "0",
+                              "limit": "4",
+                            });
+                          },
+                          model: product,
+                          builder: ((context) {
+                            return FeedsGridWidget(productsList: product.all!);
                           }))
                     ]),
                   ),
