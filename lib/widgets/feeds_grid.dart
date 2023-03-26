@@ -1,13 +1,12 @@
+import 'package:eccomerce_shop_app/models/products.model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../models/products.model.dart';
 import 'feeds_widget.dart';
 
 class FeedsGridWidget extends StatelessWidget {
   const FeedsGridWidget({Key? key, required this.productsList})
       : super(key: key);
-  final List<ProductsModel> productsList;
+  final List<Product> productsList;
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -20,10 +19,8 @@ class FeedsGridWidget extends StatelessWidget {
             mainAxisSpacing: 0.0,
             childAspectRatio: 0.6),
         itemBuilder: (ctx, index) {
-          return ChangeNotifierProvider.value(
-            value: productsList[index],
-            child: const FeedsWidget(),
-          );
+          final Product product = productsList[index];
+          return FeedsWidget(product);
         });
   }
 }

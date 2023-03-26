@@ -1,10 +1,11 @@
+import 'package:eccomerce_shop_app/consts/api_consts.dart';
+import 'package:eccomerce_shop_app/models/users_model.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:provider/provider.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
 import '../consts/global_colors.dart';
-import '../models/users_model.dart';
 
 class UsersWidget extends StatelessWidget {
   const UsersWidget({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class UsersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final usersModelProvider = Provider.of<UsersModel>(context);
+    final usersModelRocket = Rocket.get<UsersModel>(rocketUsersKey);
     return ListTile(
       leading: FancyShimmerImage(
         height: size.width * 0.15,
@@ -22,13 +23,13 @@ class UsersWidget extends StatelessWidget {
           color: Colors.red,
           size: 28,
         ),
-        imageUrl: usersModelProvider.avatar.toString(),
+        imageUrl: usersModelRocket.avatar.toString(),
         boxFit: BoxFit.fill,
       ),
-      title: Text(usersModelProvider.name.toString()),
-      subtitle: Text(usersModelProvider.email.toString()),
+      title: Text(usersModelRocket.name.toString()),
+      subtitle: Text(usersModelRocket.email.toString()),
       trailing: Text(
-        usersModelProvider.role.toString(),
+        usersModelRocket.role.toString(),
         style: TextStyle(
           color: lightIconsColor,
           fontWeight: FontWeight.bold,
