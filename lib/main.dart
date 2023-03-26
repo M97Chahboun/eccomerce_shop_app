@@ -1,15 +1,19 @@
+import 'package:eccomerce_shop_app/consts/api_consts.dart';
 import 'package:eccomerce_shop_app/screens/home_screen.dart';
-import 'package:eccomerce_shop_app/widgets/sale_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
 import 'consts/global_colors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key) {
+    RocketRequest baseRequest = RocketRequest(url: "https://$baseUrl/api/v1");
+    Rocket.add(rocketRequestKey, baseRequest);
+  }
 
   // This widget is the root of your application.
   @override
