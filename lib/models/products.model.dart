@@ -1,37 +1,75 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
+import 'package:mvc_rocket/mvc_rocket.dart';
 
 import 'categories_model.dart';
 
-class ProductsModel with ChangeNotifier {
+const String productIdField = "id";
+const String productTitleField = "title";
+const String productPriceField = "price";
+const String productDescriptionField = "description";
+const String productImagesField = "images";
+const String productCreationAtField = "creationAt";
+const String productUpdatedAtField = "updatedAt";
+const String productCategoryField = "category";
+
+class Product extends RocketModel<Product> {
   int? id;
   String? title;
   int? price;
   String? description;
-  CategoriesModel? category;
-  List<String>? images;
+  List<dynamic>? images;
+  String? creationAt;
+  String? updatedAt;
+  Category? category;
 
-  ProductsModel(
-      {this.id,
-      this.title,
-      this.price,
-      this.description,
-      this.category,
-      this.images});
+  Product({
+    this.id,
+    this.title,
+    this.price,
+    this.description,
+    this.images,
+    this.creationAt,
+    this.updatedAt,
+    this.category,
+  }) {
+    category ??= Category();
+  }
 
-  ProductsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    price = json['price'];
-    description = json['description'];
-    category = json['category'] != null
-        ? CategoriesModel.fromJson(json['category'])
-        : null;
-    images = json['images'].cast<String>();
+  @override
+  void fromJson(Map<String, dynamic> json, {bool isSub = false}) {
+    id = json[productIdField];
+    title = json[productTitleField];
+    price = json[productPriceField];
+    description = json[productDescriptionField];
+    images = json[productImagesField];
+    creationAt = json[productCreationAtField];
+    updatedAt = json[productUpdatedAtField];
+    category!.fromJson(json[productCategoryField]);
+    super.fromJson(json, isSub: isSub);
   }
-  static List<ProductsModel> productsFromSnapshot(List productSnaphot) {
-    // print("data ${productSnaphot[0]}");
-    return productSnaphot.map((data) {
-      return ProductsModel.fromJson(data);
-    }).toList();
+
+  @override
+  void setException(RocketException exception) {
+    log(exception.exception.toString());
+    super.setException(exception);
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data[productIdField] = id;
+    data[productTitleField] = title;
+    data[productPriceField] = price;
+    data[productDescriptionField] = description;
+    data[productImagesField] = images;
+    data[productCreationAtField] = creationAt;
+    data[productUpdatedAtField] = updatedAt;
+    data[productCategoryField] = category!.toJson();
+
+    return data;
+  }
+
+  @override
+  get instance => Product();
 }

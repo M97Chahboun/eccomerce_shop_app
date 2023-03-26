@@ -1,21 +1,48 @@
-import 'package:flutter/material.dart';
+import 'package:mvc_rocket/mvc_rocket.dart';
 
-class CategoriesModel with ChangeNotifier {
+const String categoryIdField = "id";
+const String categoryNameField = "name";
+const String categoryImageField = "image";
+const String categoryCreationAtField = "creationAt";
+const String categoryUpdatedAtField = "updatedAt";
+
+class Category extends RocketModel<Category> {
   int? id;
   String? name;
   String? image;
+  String? creationAt;
+  String? updatedAt;
 
-  CategoriesModel({this.id, this.name, this.image});
+  Category({
+    this.id,
+    this.name,
+    this.image,
+    this.creationAt,
+    this.updatedAt,
+  });
 
-  CategoriesModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    image = json['image'];
+  @override
+  void fromJson(Map<String, dynamic> json, {bool isSub = false}) {
+    id = json[categoryIdField];
+    name = json[categoryNameField];
+    image = json[categoryImageField];
+    creationAt = json[categoryCreationAtField];
+    updatedAt = json[categoryUpdatedAtField];
+    super.fromJson(json, isSub: isSub);
   }
-  static List<CategoriesModel> categoriesFromSnapshot(List categoriesSnaphot) {
-    // print("data ${categoriesSnaphot[0]}");
-    return categoriesSnaphot.map((data) {
-      return CategoriesModel.fromJson(data);
-    }).toList();
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    data[categoryIdField] = id;
+    data[categoryNameField] = name;
+    data[categoryImageField] = image;
+    data[categoryCreationAtField] = creationAt;
+    data[categoryUpdatedAtField] = updatedAt;
+
+    return data;
   }
+
+  @override
+  get instance => Category();
 }
