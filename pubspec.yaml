@@ -38,9 +38,11 @@ dependencies:
   flutter_iconly: ^1.0.2
   card_swiper: ^2.0.4
   page_transition: ^2.0.9
-  provider: ^6.0.5
   fancy_shimmer_image: ^2.0.2
-  http: ^0.13.5
+  mvc_rocket:
+    git:
+      url: https://github.com/JahezAcademy/mvc_rocket.git
+      ref: dev  
 
 dev_dependencies:
   flutter_test:
