@@ -1,1 +1,3 @@
-const String BASE_URL = "api.escuelajs.co";
+const String baseUrl = "api.escuelajs.co";
+const String rocketUsersKey = "rocketUsers";
+const String rocketCategoriesKey = "rocketCategories";
