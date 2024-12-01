@@ -1,6 +1,6 @@
 import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import '../models/products.model.dart';
 import '../widgets/feeds_widget.dart';
@@ -43,7 +43,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
   final Product product = Product();
 
   Future<void> getProducts() async {
-    Rocket.get<RocketRequest>(rocketRequestKey).request("products",
+    Rocket.get<RocketClient>(rocketRequestKey).request("products",
         model: product, params: {"limit": limit.toString()});
     setState(() {});
   }
@@ -67,7 +67,10 @@ class _FeedsScreenState extends State<FeedsScreen> {
                     error: error,
                   );
                 },
-                builder: (context) {
+                onLoading:()=> const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                builder: (context, state) {
                   return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import 'categories_model.dart';
 
@@ -37,7 +37,8 @@ class Product extends RocketModel<Product> {
   }
 
   @override
-  void fromJson(Map<String, dynamic> json, {bool isSub = false}) {
+  void fromJson(Map<String, dynamic>? json, {bool isSub = false}) {
+    if(json == null) return;
     id = json[productIdField];
     title = json[productTitleField];
     price = json[productPriceField];
@@ -50,9 +51,9 @@ class Product extends RocketModel<Product> {
   }
 
   @override
-  void setException(RocketException exception) {
-    log(exception.exception.toString());
-    super.setException(exception);
+  void setException(RocketException rocketException) {
+    log(rocketException.exception.toString());
+    super.setException(rocketException);
   }
 
   @override

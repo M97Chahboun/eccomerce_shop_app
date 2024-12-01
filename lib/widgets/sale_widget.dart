@@ -34,12 +34,12 @@ class SalesWidget extends StatelessWidget {
                   color: const Color(0xff9689cE),
                   borderRadius: BorderRadius.circular(18),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         "Get the speacial account ",
                         style: TextStyle(color: Colors.white),

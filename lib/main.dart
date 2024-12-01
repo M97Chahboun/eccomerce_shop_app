@@ -1,7 +1,7 @@
 import 'package:eccomerce_shop_app/consts/api_consts.dart';
 import 'package:eccomerce_shop_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import 'consts/global_colors.dart';
 
@@ -11,8 +11,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key) {
-    RocketRequest baseRequest = RocketRequest(url: "https://$baseUrl/api/v1");
-    Rocket.add(rocketRequestKey, baseRequest);
+    RocketClient baseRequest = RocketClient(url: "https://$baseUrl/api/v1");
+    Rocket.add(key: rocketRequestKey, baseRequest);
   }
 
   // This widget is the root of your application.
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
               secondary: lightIconsColor,
               brightness: Brightness.light,
             )
-            .copyWith(background: lightBackgroundColor),
+            .copyWith(surface: lightBackgroundColor),
       ),
       home: const HomeScreen(),
     );

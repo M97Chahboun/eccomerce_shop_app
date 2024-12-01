@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import '../consts/api_consts.dart';
 import '../models/users_model.dart';
@@ -23,16 +23,19 @@ class UsersScreen extends StatelessWidget {
           },
           model: users,
           call: () {
-            Rocket.get<RocketRequest>(rocketRequestKey).request(
+            Rocket.get<RocketClient>(rocketRequestKey).request(
               "users",
               model: users,
             );
           },
-          builder: (context) {
+          onLoading:()=> const Center(
+            child: CircularProgressIndicator(),
+          ),
+          builder: (context, state) {
             return ListView.builder(
                 itemCount: users.all!.length,
                 itemBuilder: (ctx, index) {
-                  Rocket.add<UsersModel>(rocketUsersKey, users.all![index]);
+                  Rocket.add<UsersModel>(key: rocketUsersKey, users.all![index]);
                   return const UsersWidget();
                 });
           }),

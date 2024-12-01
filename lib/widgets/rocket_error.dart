@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 class RocketErrorView extends StatelessWidget {
   const RocketErrorView({

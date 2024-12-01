@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:eccomerce_shop_app/consts/api_consts.dart';
 import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import '../models/categories_model.dart';
 import '../widgets/category_widget.dart';
@@ -24,8 +24,11 @@ class CategoriesScreen extends StatelessWidget {
                 error: error,
               );
             },
+            onLoading :()=> const Center(
+            child: CircularProgressIndicator(),
+          ),
             call: () {
-              Rocket.get<RocketRequest>(rocketRequestKey).request(
+              Rocket.get<RocketClient>(rocketRequestKey).request(
                 "categories",
                 model: category,
                 inspect: (data) {
@@ -34,7 +37,7 @@ class CategoriesScreen extends StatelessWidget {
                 },
               );
             },
-            builder: (context) {
+            builder: (context, state) {
               return GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -47,7 +50,7 @@ class CategoriesScreen extends StatelessWidget {
                   ),
                   itemBuilder: (ctx, index) {
                     print(category.all);
-                    Rocket.add(rocketCategoriesKey, category.all![index]);
+                    Rocket.add(key: rocketCategoriesKey, category.all![index]);
                     return const CategoryWidget();
                   });
             }));

@@ -1,15 +1,15 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:eccomerce_shop_app/models/products.model.dart';
 import 'package:eccomerce_shop_app/screens/users_screen.dart';
+import 'package:eccomerce_shop_app/widgets/feeds_grid.dart';
 import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../consts/global_colors.dart';
 import '../widgets/appbar_icons.dart';
-import '../widgets/feeds_grid.dart';
 import '../widgets/sale_widget.dart';
 import 'categories_screen.dart';
 import 'feeds_screen.dart';
@@ -161,14 +161,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           call: () {
-                            Rocket.get<RocketRequest>(rocketRequestKey)
+                            Rocket.get<RocketClient>(rocketRequestKey)
                                 .request("products", model: product, params: {
                               "offset": "0",
                               "limit": "4",
                             });
                           },
                           model: product,
-                          builder: ((context) {
+                          builder: ((context, state) {
                             return FeedsGridWidget(productsList: product.all!);
                           }))
                     ]),

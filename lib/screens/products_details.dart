@@ -2,7 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:eccomerce_shop_app/widgets/rocket_error.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 import '../consts/global_colors.dart';
 import '../models/products.model.dart';
@@ -36,10 +36,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                 );
               },
               call: () {
-                Rocket.get<RocketRequest>(rocketRequestKey)
+                Rocket.get<RocketClient>(rocketRequestKey)
                     .request("products/${widget.id}", model: productsModel);
               },
-              builder: (context) {
+              onLoading:()=> const Center(
+                child: CircularProgressIndicator(),
+              ),
+              builder: (context, state) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,

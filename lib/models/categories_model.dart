@@ -1,4 +1,4 @@
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 const String categoryIdField = "id";
 const String categoryNameField = "name";
@@ -22,7 +22,8 @@ class Category extends RocketModel<Category> {
   });
 
   @override
-  void fromJson(Map<String, dynamic> json, {bool isSub = false}) {
+  void fromJson(Map<String, dynamic>? json, {bool isSub = false}) {
+    if(json == null) return;
     id = json[categoryIdField];
     name = json[categoryNameField];
     image = json[categoryImageField];

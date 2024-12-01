@@ -1,4 +1,4 @@
-import 'package:mvc_rocket/mvc_rocket.dart';
+import 'package:flutter_rocket/flutter_rocket.dart';
 
 const String usersmodelIdField = "id";
 const String usersmodelEmailField = "email";
@@ -31,7 +31,8 @@ class UsersModel extends RocketModel<UsersModel> {
   });
 
   @override
-  void fromJson(Map<String, dynamic> json, {bool isSub = false}) {
+  void fromJson(Map<String, dynamic>? json, {bool isSub = false}) {
+    if(json == null) return;
     id = json[usersmodelIdField];
     email = json[usersmodelEmailField];
     password = json[usersmodelPasswordField];
